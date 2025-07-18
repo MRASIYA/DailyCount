@@ -4,12 +4,7 @@ function onOpen() {
     .addToUi();
 }
 
-function showSidebar() {
-  const html = HtmlService.createHtmlOutputFromFile("Index")
-    .setTitle("Material Issue Manager")
-    .setWidth(300);
-  SpreadsheetApp.getUi().showSidebar(html);
-}
+
 
 function doGet(e) {
   return HtmlService.createHtmlOutputFromFile("Index");
