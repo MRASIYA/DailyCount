@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
+  <meta charset="UTF-8">
+  <title>Material Manager</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
       background: #f0f4f8;
-      color: #333;
     }
 
     h2 {
@@ -46,14 +46,22 @@
     }
 
     #status {
+      margin-top: 15px;
       text-align: center;
-      margin-top: 10px;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>Material Issue Manager</h2>
+  <iframe
+  src="https://script.google.com/macros/s/AKfycbyaHX_kFOja9va2ThUmGX-xXt24rsy4pkZw9XKT_QUUE4OLJa_M8WiQOuAvJWsB5EM/exec"
+  width="100%"
+  height="700"
+  frameborder="0"
+  style="border:1px solid #ccc; border-radius:10px;">
+</iframe>
+
+  <h2>Material Manager</h2>
 
   <label for="material">Select Material:</label>
   <select id="material"></select>
@@ -67,58 +75,38 @@
   <div id="status"></div>
 
   <script>
-    // Load material list from Google Sheet
     google.script.run.withSuccessHandler(function(materials) {
       const select = document.getElementById("material");
-      materials.forEach(mat => {
-        const opt = document.createElement("option");
-        opt.value = opt.textContent = mat;
-        select.appendChild(opt);
+      materials.forEach(name => {
+        const option = document.createElement("option");
+        option.value = option.textContent = name;
+        select.appendChild(option);
       });
     }).getMaterialList();
 
-    // Handle quantity submission
     function submit() {
       const material = document.getElementById("material").value;
-      const qty = document.getElementById("qty").value;
+      const qty = parseFloat(document.getElementById("qty").value);
+      const status = document.getElementById("status");
 
       if (!qty || qty <= 0) {
-        document.getElementById("status").textContent = "Enter a valid quantity!";
-        document.getElementById("status").style.color = "red";
+        status.textContent = "❌ Please enter a valid quantity!";
+        status.style.color = "red";
         return;
       }
 
-      google.script.run.withSuccessHandler(function(message) {
-        document.getElementById("status").textContent = message;
-        document.getElementById("status").style.color = "green";
+      google.script.run.withSuccessHandler(function(response) {
+        status.textContent = response;
+        status.style.color = "green";
         document.getElementById("qty").value = "";
       }).updateQuantity(material, qty);
     }
 
-    // Handle XLSX download
     function downloadXLSX() {
       google.script.run.withSuccessHandler(function(url) {
-        window.open(url, "_blank");
+        window.open(url, '_blank');
       }).generateExcelDownloadLink();
     }
-    
-
   </script>
-  <iframe
-  src="https://script.google.com/macros/s/AKfycbyaHX_kFOja9va2ThUmGX-xXt24rsy4pkZw9XKT_QUUE4OLJa_M8WiQOuAvJWsB5EM/exec"
-  width="100%"
-  height="600"
-  frameborder="0">
-</iframe>
-
-<section style="max-width:800px; margin:auto; border:1px solid #ccc; padding:10px;">
-  <h2>📋 Material Manager</h2>
-  <iframe
-    src="https://script.google.com/macros/s/AKfycbyaHX_kFOja9va2ThUmGX-xXt24rsy4pkZw9XKT_QUUE4OLJa_M8WiQOuAvJWsB5EM/exec"
-    width="100%"
-    height="650"
-    style="border: none;">
-  </iframe>
-</section>
 </body>
 </html>
