@@ -15,6 +15,7 @@ function doGet(e) {
   return HtmlService.createHtmlOutputFromFile("Index");
 }
 
+
 // Get unique material names from column C
 function getMaterialList() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
